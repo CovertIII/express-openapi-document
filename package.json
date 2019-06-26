@@ -12,6 +12,10 @@
   },
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/CovertIII/express-openapi-document.git"
+  },
   "dependencies": {
     "ajv": "^6.10.0",
     "ramda": "^0.26.1",

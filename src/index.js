@@ -14,6 +14,8 @@
  * Also I want a place to define all the JSON schema definititions and link between them correctly.
  * I need to think how to do that.
  */
+const pathToSwaggerUi = require('swagger-ui-dist').absolutePath();
+const { renderHtml } = require('./spec.html.js');
 const R = require('ramda');
 const Ajv = require('ajv');
 
@@ -89,6 +91,7 @@ const createRouteRegistry = ({router, openAPI}) => {
     }
   };
 
+
   const specRouter = {
     //TODO - use ...args - fist one the path, if the last on is an object then pass it as a schema object to the register method,
     // This is mainly to support custom middleware
@@ -122,7 +125,24 @@ const createRouteRegistry = ({router, openAPI}) => {
   const getSpec = () => {
     return specContainer;
   };
-  return { specRouter, getSpec};
+
+  const serveSpec = ({
+    express,
+    app,
+    swaggerPath = '/swagger',
+    specPath = '/spec.json',
+    specHtml = '/spec.html',
+  }) => {
+    app.use(swaggerPath, express.static(pathToSwaggerUi));
+    app.get(specPath, (req, res) => {
+      res.json(getSpec());
+    });
+    app.get(specHtml, (_, res) => {
+      res.send(renderHtml({swaggerPath, specPath}));
+    });
+  };
+
+  return { specRouter, getSpec, serveSpec};
 };
 
 module.exports = {

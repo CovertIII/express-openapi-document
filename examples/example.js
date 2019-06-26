@@ -2,9 +2,9 @@ const pathToSwaggerUi = require('swagger-ui-dist').absolutePath();
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3005;
 
-const { createRouteRegistry } = require('express-openapi-document');
+const { createRouteRegistry } = require('../src/index.js');
 
 app.use(bodyParser.json());
 
@@ -21,7 +21,7 @@ const openAPIRoot = {
   tags:[],
   schemes: [ 'http', 'https'],
   paths: {}
-}
+};
 
 const postSchema = {
   type: 'object',
@@ -29,10 +29,10 @@ const postSchema = {
     title: { type: 'string' },
     body: { type: 'string' },
     author: { type: 'string' },
-    date: { type: 'string', format: 'datetime' },
+    date: { type: 'string', format: 'date-time' },
     tags: { type: 'array', items: { type: 'string' }},
   },
-  required: ['title, 'body', 'author', 'date']
+  required: ['title', 'body', 'author', 'date']
 };
 
 const { specRouter, getSpec } = createRouteRegistry({router: app, openAPI: openAPIRoot});
@@ -45,8 +45,8 @@ const registerRoutes = (app) => {
     const post = {body, title, date, author, tags};
     posts.push(post);
     res.json(post);
-  }), {
-    description: 'save a post'
+  }, {
+    description: 'save a post',
     operationId: 'savePost',
     parameters: [
       {
@@ -65,8 +65,8 @@ const registerRoutes = (app) => {
     }
   });
 
-  app.get('posts', (req, res) => {
-    res.json(posts)
+  app.get('/posts', (req, res) => {
+    res.json(posts);
   }, {
     description: 'get list of posts',
     responses: {

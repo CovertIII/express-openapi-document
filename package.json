@@ -2,7 +2,7 @@
   "name": "express-openapi-document",
   "version": "1.0.0",
   "description": "Document express routes with openAPI automaticlly",
-  "main": "index.js",
+  "main": "src/index.js",
   "directories": {
     "example": "examples"
   },
